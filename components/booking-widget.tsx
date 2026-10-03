@@ -132,9 +132,9 @@ export function BookingButton({ className = '' }: { className?: string }) {
                       <span>Open calendar in new tab</span>
                       <ArrowUpRight size={13} />
                     </a>
-                    <a href="mailto:hello@web3spell.com" className="booking-quick-pill">
+                    <a href="mailto:hello@web3spell.fun" className="booking-quick-pill">
                       <Mail size={14} />
-                      <span>hello@web3spell.com</span>
+                      <span>hello@web3spell.fun</span>
                     </a>
                   </div>
 

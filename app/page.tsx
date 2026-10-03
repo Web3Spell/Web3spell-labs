@@ -838,9 +838,9 @@ export default function Page() {
         <div className="timeline">
           <div className="timeline-line" aria-hidden="true" />
           {[
-            ['2024', 'Arbitrum Ignite Bootcamp', '12-day Web3 bootcamp · 250+ developers'],
+            ['2025', 'Arbitrum Ignite Bootcamp', '12-day Web3 bootcamp · 250+ developers'],
             ['2025', 'Core Nexus Hackathon', '36-hour hackathon · Central India'],
-            ['2025', 'TOKEN2049 Origins', 'Hackathon track prize · Singapore'],
+            ['2025', 'Buildstation Bhopal', '40+ projects submitted from our buildstation in global hackathon even few won and are live grants till now'],
           ].map((event) => (
             <article className="timeline-item" key={event[0] + event[1]}>
               <span>{event[0]}</span>

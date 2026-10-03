@@ -340,6 +340,7 @@ export function SiteHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [activeMenu, setActiveMenu] = useState<NavMenuKey | null>(null)
+  const [mobileExpanded, setMobileExpanded] = useState<NavMenuKey | null>(null)
   const headerRef = useRef<HTMLElement>(null)
   const closeTimerRef = useRef<number | null>(null)
 
@@ -359,6 +360,23 @@ export function SiteHeader() {
       setActiveMenu(null)
     }, 120)
   }
+
+  useEffect(() => {
+    setOpen(false)
+    setActiveMenu(null)
+    setMobileExpanded(null)
+  }, [pathname])
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   useEffect(() => {
     function handleClickOutside(event: globalThis.MouseEvent) {
@@ -386,7 +404,7 @@ export function SiteHeader() {
   return (
     <header
       ref={headerRef}
-      className={`site-header ${activeMenu ? 'has-mega-open' : ''}`}
+      className={`site-header ${activeMenu ? 'has-mega-open' : ''} ${open ? 'is-mobile-open' : ''}`}
       onMouseLeave={scheduleCloseMenu}
     >
       <div className="site-header-bar">
@@ -414,29 +432,64 @@ export function SiteHeader() {
             const isRouteActive =
               pathname === menu.href || pathname?.startsWith(`${menu.href}/`)
             const isOpen = activeMenu === key
+            const isMobileOpen = mobileExpanded === key
             return (
               <div
                 key={key}
-                className="nav-dropdown"
+                className={`nav-dropdown ${isMobileOpen ? 'is-mobile-expanded' : ''}`}
                 onMouseEnter={() => openMenu(key)}
               >
-                <Link
-                  href={menu.href}
-                  className={`nav-link-item ${isRouteActive || isOpen ? 'is-active' : ''}`}
-                  aria-expanded={isOpen}
-                  onClick={() => {
-                    setOpen(false)
-                    setActiveMenu(null)
-                  }}
-                >
-                  <span>{menu.label}</span>
-                  <span
-                    className={`nav-plus-box ${isOpen ? 'is-open' : ''}`}
-                    aria-hidden="true"
+                <div className="nav-dropdown-row">
+                  <Link
+                    href={menu.href}
+                    className={`nav-link-item ${isRouteActive || isOpen ? 'is-active' : ''}`}
+                    aria-expanded={isOpen}
+                    onClick={() => {
+                      setOpen(false)
+                      setActiveMenu(null)
+                    }}
                   >
-                    {isOpen ? '×' : '+'}
-                  </span>
-                </Link>
+                    <span>{menu.label}</span>
+                    <span
+                      className={`nav-plus-box desktop-only-plus ${isOpen ? 'is-open' : ''}`}
+                      aria-hidden="true"
+                    >
+                      {isOpen ? '×' : '+'}
+                    </span>
+                  </Link>
+                  <button
+                    type="button"
+                    className={`mobile-accordion-btn ${isMobileOpen ? 'is-open' : ''}`}
+                    aria-label={`Toggle ${menu.label} submenu`}
+                    aria-expanded={isMobileOpen}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      setMobileExpanded(isMobileOpen ? null : key)
+                    }}
+                  >
+                    {isMobileOpen ? '×' : '+'}
+                  </button>
+                </div>
+
+                {isMobileOpen && (
+                  <div className="mobile-subnav">
+                    {menu.columns.flatMap((col) => col.items).map((sub) => (
+                      <Link
+                        key={sub.title + sub.href}
+                        href={sub.href}
+                        className="mobile-subnav-link"
+                        onClick={() => {
+                          setOpen(false)
+                          setMobileExpanded(null)
+                        }}
+                      >
+                        <span>{sub.title}</span>
+                        <small>{sub.tag}</small>
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -464,17 +517,20 @@ export function SiteHeader() {
             )
           })}
 
-          <Link
-            className="mobile-nav-cta"
-            href="/contact"
-            onClick={() => {
-              setOpen(false)
-              setActiveMenu(null)
-            }}
-          >
-            <span>Start a project</span>
-            <ArrowUpRight size={16} />
-          </Link>
+          <div className="mobile-nav-actions">
+            <Link
+              className="mobile-nav-cta"
+              href="/contact"
+              onClick={() => {
+                setOpen(false)
+                setActiveMenu(null)
+              }}
+            >
+              <span>Start a project</span>
+              <ArrowUpRight size={16} />
+            </Link>
+            <BookingButton className="mobile-booking-cta" />
+          </div>
         </nav>
 
         <div className="header-actions" onMouseEnter={() => setActiveMenu(null)}>
@@ -586,7 +642,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-column">
           <span className="section-kicker">CONTACT</span>
-          <Link href="/contact">hello@web3spell.com</Link>
+          <Link href="/contact">hello@web3spell.fun</Link>
           <Link href="/contact">Start a project</Link>
           <BookingButton className="footer-booking" />
         </div>

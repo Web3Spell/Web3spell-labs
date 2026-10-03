@@ -42,10 +42,40 @@ export async function POST(request: Request) {
       )
     }
 
+    const web3formsKey = process.env.WEB3FORMS_ACCESS_KEY || 'e019320d-75b6-4a8c-a0e4-d24ce140038e'
     const resendKey = process.env.RESEND_API_KEY
     const formspreeEndpoint = process.env.FORMSPREE_ENDPOINT
 
-    if (resendKey) {
+    if (web3formsKey) {
+      const web3formsRes = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: web3formsKey,
+          name,
+          email,
+          organization,
+          focus_area: help,
+          message: overview,
+          subject: `Project Enquiry: ${organization} (${name})`,
+          from_name: 'Web3Spell Labs Website',
+        }),
+      })
+
+      const web3data = await web3formsRes.json()
+      if (!web3formsRes.ok || !web3data.success) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: web3data.message || 'Dispatch service encountered an error. Please email hello@web3spell.fun directly.',
+          },
+          { status: 502 }
+        )
+      }
+    } else if (resendKey) {
       const resendRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -53,8 +83,8 @@ export async function POST(request: Request) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: process.env.RESEND_FROM_EMAIL || 'Web3Spell Labs <intake@web3spell.com>',
-          to: [process.env.CONTACT_RECEIVER_EMAIL || 'hello@web3spell.com'],
+          from: process.env.RESEND_FROM_EMAIL || 'Web3Spell Labs <intake@web3spell.fun>',
+          to: [process.env.CONTACT_RECEIVER_EMAIL || 'hello@web3spell.fun'],
           reply_to: email,
           subject: `Project Enquiry: ${organization} (${name})`,
           text: [
@@ -73,7 +103,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             ok: false,
-            error: 'Email dispatch service encountered an error. Please retry or email hello@web3spell.com directly.',
+            error: 'Email dispatch service encountered an error. Please retry or email hello@web3spell.fun directly.',
           },
           { status: 502 }
         )
@@ -92,7 +122,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             ok: false,
-            error: 'Form relay service encountered an error. Please retry or email hello@web3spell.com directly.',
+            error: 'Form relay service encountered an error. Please retry or email hello@web3spell.fun directly.',
           },
           { status: 502 }
         )
@@ -110,7 +140,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error: 'Unable to process your request right now. Please retry or reach us at hello@web3spell.com.',
+        error: 'Unable to process your request right now. Please retry or reach us at hello@web3spell.fun.',
       },
       { status: 500 }
     )

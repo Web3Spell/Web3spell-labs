@@ -40,27 +40,38 @@ export function ProjectEnquiryForm({ compact = false }: ProjectEnquiryFormProps)
     setMessage('')
 
     try {
-      const response = await fetch('/api/contact', {
+      const formData = new FormData()
+      formData.append('access_key', 'e019320d-75b6-4a8c-a0e4-d24ce140038e')
+      formData.append('name', payload.name)
+      formData.append('email', payload.email)
+      formData.append('organization', payload.organization || 'Independent / Unspecified')
+      formData.append('focus_area', payload.help)
+      formData.append('message', payload.overview)
+      formData.append(
+        'subject',
+        `New Project Enquiry: ${payload.organization || payload.name} (${payload.help})`
+      )
+      formData.append('from_name', 'Web3Spell Labs Website')
+
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'enquiry', ...payload }),
+        body: formData,
       })
 
       const data = await response.json()
 
-      if (!response.ok || !data.ok) {
+      if (!response.ok || !data.success) {
         setState('error')
         setMessage(
-          data.error || 'Something went wrong while sending your enquiry.'
+          data.message || 'Something went wrong while sending your enquiry.'
         )
         return
       }
 
       setState('success')
-      setReferenceId(data.referenceId || '')
+      setReferenceId(data.data?.reference_id || `W3S-${Date.now().toString(36).toUpperCase()}`)
       setMessage(
-        data.message ||
-          'Project enquiry received. Our team will respond within one business day.'
+        'Project enquiry received. Our team will respond within one business day.'
       )
     } catch {
       setState('error')
@@ -231,7 +242,7 @@ export function ProjectEnquiryForm({ compact = false }: ProjectEnquiryFormProps)
               </button>
             )}
             <span>
-              Or write directly to <code>hello@web3spell.com</code>
+              Or write directly to <code>hello@web3spell.fun</code>
             </span>
           </div>
         </div>

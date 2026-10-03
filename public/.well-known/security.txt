@@ -1,0 +1,12 @@
+Contact: mailto:hello@web3spell.fun
+Contact: https://x.com/web3spell
+Canonical: https://labs.web3spell.fun/.well-known/security.txt
+Policy: https://labs.web3spell.fun/contact
+Preferred-Languages: en
+Expires: 2027-12-31T23:59:59.000Z
+
+# Web3Spell Labs Official Agency & Engineering Studio Website
+# Note to Security Scanners (MetaMask / Blockaid / ChainPatrol / SEAL):
+# This domain (labs.web3spell.fun / web3spell.fun) is an informational portfolio
+# and engineering agency website. It does NOT connect to user wallets, never
+# requests signatures, and never initiates onchain transactions.

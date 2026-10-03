@@ -198,7 +198,7 @@ export default function CareersPage() {
 
                   <div className="careers-role__cta-col">
                     <a
-                      href={`mailto:hello@web3spell.com?subject=${encodeURIComponent(
+                      href={`mailto:hello@web3spell.fun?subject=${encodeURIComponent(
                         `Application: ${role.title}`
                       )}`}
                       className="hero-primary"
@@ -259,7 +259,7 @@ export default function CareersPage() {
                 <span className="careers-apply-step__num">01</span>
                 <div>
                   <strong>Send your best work</strong>
-                  <p>Email hello@web3spell.com with 2 to 3 links to real code, contracts, or interfaces you built.</p>
+                  <p>Email hello@web3spell.fun with 2 to 3 links to real code, contracts, or interfaces you built.</p>
                 </div>
               </div>
               <div className="careers-apply-step">
@@ -280,10 +280,10 @@ export default function CareersPage() {
 
             <div className="careers-apply-banner__actions">
               <a
-                href="mailto:hello@web3spell.com?subject=Open%20Application%20-%20Web3Spell%20Labs"
+                href="mailto:hello@web3spell.fun?subject=Open%20Application%20-%20Web3Spell%20Labs"
                 className="hero-primary"
               >
-                Email hello@web3spell.com <ArrowUpRight size={15} />
+                Email hello@web3spell.fun <ArrowUpRight size={15} />
               </a>
               <Link href="/work" className="secondary-button">
                 Inspect Our Work First

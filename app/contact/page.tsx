@@ -17,7 +17,7 @@ export default function ContactPage() {
           </p>
           <p className="contact-tertiary-email">
             Prefer direct email?{' '}
-            <a href="mailto:hello@web3spell.com">hello@web3spell.com</a>
+            <a href="mailto:hello@web3spell.fun">hello@web3spell.fun</a>
           </p>
         </div>
 
