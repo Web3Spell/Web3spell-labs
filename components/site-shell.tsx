@@ -433,6 +433,7 @@ export function SiteHeader() {
               pathname === menu.href || pathname?.startsWith(`${menu.href}/`)
             const isOpen = activeMenu === key
             const isMobileOpen = mobileExpanded === key
+            const isIndicatorOpen = open ? isMobileOpen : isOpen
             return (
               <div
                 key={key}
@@ -444,36 +445,39 @@ export function SiteHeader() {
                     href={menu.href}
                     className={`nav-link-item ${isRouteActive || isOpen ? 'is-active' : ''}`}
                     aria-expanded={isOpen}
-                    onClick={() => {
-                      setOpen(false)
-                      setActiveMenu(null)
+                    onClick={(e) => {
+                      if (open) {
+                        e.preventDefault()
+                        setMobileExpanded(isMobileOpen ? null : key)
+                      } else {
+                        setOpen(false)
+                        setActiveMenu(null)
+                      }
                     }}
                   >
                     <span>{menu.label}</span>
                     <span
-                      className={`nav-plus-box desktop-only-plus ${isOpen ? 'is-open' : ''}`}
+                      className={`nav-plus-box ${isIndicatorOpen ? 'is-open' : ''}`}
                       aria-hidden="true"
                     >
-                      {isOpen ? '×' : '+'}
+                      {isIndicatorOpen ? '×' : '+'}
                     </span>
                   </Link>
-                  <button
-                    type="button"
-                    className={`mobile-accordion-btn ${isMobileOpen ? 'is-open' : ''}`}
-                    aria-label={`Toggle ${menu.label} submenu`}
-                    aria-expanded={isMobileOpen}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      setMobileExpanded(isMobileOpen ? null : key)
-                    }}
-                  >
-                    {isMobileOpen ? '×' : '+'}
-                  </button>
                 </div>
 
                 {isMobileOpen && (
                   <div className="mobile-subnav">
+                    <Link
+                      href={menu.href}
+                      className="mobile-subnav-link"
+                      onClick={() => {
+                        setOpen(false)
+                        setMobileExpanded(null)
+                      }}
+                    >
+                      <span>All {menu.label}</span>
+                      <small>Overview</small>
+                    </Link>
                     {menu.columns.flatMap((col) => col.items).map((sub) => (
                       <Link
                         key={sub.title + sub.href}
